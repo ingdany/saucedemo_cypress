@@ -7,29 +7,15 @@ import FinishPage from "../pages/FinishPage";
 
 describe("Sauce Demo E2E Test", () => {
     before(() => {
-        
-        cy.fixture('users.json').as("users");
-        // cy.fixture('users.json').then((users) => {
-            
-        //     // user = users[0].username;
-        //     // password = users[0].password;
-        //     // cy.log("User: " + user, "Password: " + password);
-            
-        // })
-
-        
+        cy.fixture('customer.json').as("customer");
     })
 
     it("Make a purchase of 2 items", () => {
-        let userName = "";
-        let password = "";
-        cy.get("@users").then((users) => {
-            userName = users.users[0].username;
-            password = users.users[0].password;
-            cy.log("User: " + userName, "Password: " + password);
-            LoginPage.visit();
-            LoginPage.login(userName, password);
-        })
+        const userName = Cypress.env("username");
+        const password = Cypress.env("password");
+        cy.log("User: " + userName, "Password: " + password);
+        LoginPage.visit();
+        LoginPage.login(userName, password);
         
         InventoryPage.addProductToCart(0);
         InventoryPage.addProductToCart(1);
@@ -37,7 +23,12 @@ describe("Sauce Demo E2E Test", () => {
 
         CartPage.clickCheckoutButton();
 
-        CheckoutPage.fillCheckoutForm("John", "Doe", "12345");
+        cy.get("@customer").then((customer) => {
+            const firstname = customer.customers[0].name;
+            const lastName = customer.customers[0].lastName;
+            const zipCode = customer.customers[0].zipCode;
+            CheckoutPage.fillCheckoutForm(firstname, lastName, zipCode);
+        })
 
         OverviewPage.clickFinishButton();
 

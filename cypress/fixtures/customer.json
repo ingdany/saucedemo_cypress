@@ -1,0 +1,9 @@
+{
+    "customers": [
+        {
+            "name": "John",
+            "lastName": "Doe",
+            "zipCode": "12345"
+        }        
+    ]
+}
